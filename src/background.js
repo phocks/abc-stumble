@@ -37,6 +37,9 @@ browser.browserAction.onClicked.addListener(function() {
 
   openedStories.push(nextStory);
 
+  // Don't let array get too big
+  if (openedStories.length > 256) openedStories.shift();
+
   browser.tabs
     .create({
       url: nextStory
