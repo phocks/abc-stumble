@@ -10,7 +10,7 @@
   },
   "browser_action": {
     "default_icon": "icons/abc.png",
-    "default_title": "ABC Stumble"
+    "default_title": "ABC Stumble!"
   },
   "background": {
     "scripts": ["browser-polyfill.js", "dist/background.js"]
