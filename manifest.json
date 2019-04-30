@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "ABC Stumble",
+  "version": "1.0.0",
+
+  "description": "Loads latest ABC News",
+
+  "icons": {
+    "48": "icons/abc.png"
+  },
+  "browser_action": {
+    "default_icon": "icons/abc.png",
+    "default_title": "ABC Stumble"
+  },
+  "background": {
+    "scripts": ["browser-polyfill.js", "dist/background.js"]
+  },
+  "permissions": ["alarms"]
+}

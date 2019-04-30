@@ -1,0 +1,17 @@
+{
+  "name": "abc-stumble",
+  "version": "1.0.0",
+  "description": "Stumble the ABC",
+  "main": "dist/background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "parcel build src/background.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@abcnews/capi-fetch": "^1.3.0",
+    "fast-xml-parser": "^3.12.16",
+    "regenerator-runtime": "^0.13.2"
+  }
+}
