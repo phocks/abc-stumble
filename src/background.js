@@ -20,11 +20,17 @@ function onError(error) {
 }
 
 browser.browserAction.onClicked.addListener(function() {
+  // Loops through recent articals and returns the first one
+  // that hasn't been stumbled before
   const getNextStoryLink = (stories, alreadyOpened) => {
     for (let story of stories) {
       if (alreadyOpened.includes(story.link)) continue;
       else return story.link;
     }
+    // If all articles have been seen:
+    // clear seen stories and return back to start
+    openedStories = [];
+    return stories[0];
   };
 
   const nextStory = getNextStoryLink(stories, openedStories);
