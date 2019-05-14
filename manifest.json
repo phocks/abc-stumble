@@ -15,5 +15,20 @@
   "background": {
     "scripts": ["browser-polyfill.js", "dist/background.js"]
   },
-  "permissions": ["alarms"]
+  "permissions": ["alarms", "storage"],
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": false
+  },
+  "applications": {
+    "gecko": {
+      "id": "addon@example.com"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["browser-script.js"]
+    }
+  ]
 }
