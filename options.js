@@ -1,21 +1,21 @@
 function saveOptions(e) {
   e.preventDefault();
   browser.storage.sync.set({
-    color: document.querySelector("#color").value
+    newtab: document.querySelector("#newtab").value
   });
 }
 
 function restoreOptions() {
 
   function setCurrentChoice(result) {
-    document.querySelector("#color").value = result.color || "yellow";
+    document.querySelector("#newtab").value = result.newtab || "false";
   }
 
   function onError(error) {
     console.log(`Error: ${error}`);
   }
 
-  var getting = browser.storage.sync.get("color");
+  var getting = browser.storage.sync.get("newtab");
   getting.then(setCurrentChoice, onError);
 }
 

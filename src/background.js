@@ -2,6 +2,7 @@ const parser = require('fast-xml-parser');
 
 let stories;
 let openedStories = [];
+let options = {};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
@@ -40,11 +41,16 @@ browser.browserAction.onClicked.addListener(function() {
   // Don't let array get too big
   if (openedStories.length > 256) openedStories.shift();
 
-  browser.tabs
-    .create({
-      url: nextStory
-    })
-    .then(onCreated, onError);
+  if (options.newtab) {
+    browser.tabs
+      .create({
+        url: nextStory
+      })
+      .then(onCreated, onError);
+  } else {
+    var updating = browser.tabs.update({ url: nextStory });
+    updating.then(onUpdated, onError);
+  }
 });
 
 browser.alarms.create('get-stories', { periodInMinutes: 5 });
@@ -53,5 +59,14 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
 });
 
+const getOptions = (changes, area) => {
+  var changedItems = Object.keys(changes);
+
+  for (var item of changedItems) {
+    options = { ...options, item: changes[item].newValue };
+  }
+};
+
 // Initial grab of stories on load
 getLatest();
+browser.storage.onChanged.addListener(getOptions);
