@@ -1,6 +1,6 @@
 {
   "name": "abc-stumble",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Stumble the ABC",
   "main": "dist/background.js",
   "scripts": {

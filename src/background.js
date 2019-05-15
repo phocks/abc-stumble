@@ -41,7 +41,7 @@ browser.browserAction.onClicked.addListener(function() {
   // Don't let array get too big
   if (openedStories.length > 256) openedStories.shift();
 
-  if (options.newtab) {
+  if (options.newtab === 'true') {
     browser.tabs
       .create({
         url: nextStory
@@ -49,7 +49,7 @@ browser.browserAction.onClicked.addListener(function() {
       .then(onCreated, onError);
   } else {
     var updating = browser.tabs.update({ url: nextStory });
-    updating.then(onUpdated, onError);
+    updating.then(() => {}, () => {});
   }
 });
 
@@ -63,7 +63,7 @@ const getOptions = (changes, area) => {
   var changedItems = Object.keys(changes);
 
   for (var item of changedItems) {
-    options = { ...options, item: changes[item].newValue };
+    options = { ...options, [item]: changes[item].newValue };
   }
 };
 
