@@ -4,7 +4,7 @@ let stories;
 let openedStories = [];
 let newStoryCount = 1;
 
-let options = { newtab: "false", count: "true" };
+let options = {};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
@@ -14,9 +14,19 @@ const getLatest = () => {
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
 
-      if (options.count === 'true') {
-        updateStoryCount();
-      }
+      const storage = browser.storage.sync.get();
+      storage.then(
+        gotOptions => {
+          options = gotOptions;
+
+          if (options.count === 'true') {
+            updateStoryCount();
+          } else {
+            browser.browserAction.setBadgeText({ text: '' });
+          }
+        },
+        () => console.log('Error getting options')
+      );
     });
 };
 
@@ -86,7 +96,7 @@ browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
 });
 
-const getOptions = (changes, area) => {
+const getChangedOptions = (changes, area) => {
   var changedItems = Object.keys(changes);
 
   for (var item of changedItems) {
@@ -94,16 +104,11 @@ const getOptions = (changes, area) => {
   }
 
   console.log(options);
+  getLatest();
 };
 
 // Initial grab of stories on load
-browser.storage.onChanged.addListener(getOptions);
 getLatest();
 
-// function decrementNewStoryCount() {
-//   if (newStoryCount > 0) {
-//     browser.browserAction.setBadgeText({ text: (--newStoryCount).toString() });
-//   }
-// }
-
-// browser.browserAction.onClicked.addListener(decrementNewStoryCount);
+// Set listener for changed options
+browser.storage.onChanged.addListener(getChangedOptions);
