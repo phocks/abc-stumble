@@ -1,23 +1,55 @@
-const parser = require('fast-xml-parser');
+const parser = require("fast-xml-parser");
 
 let stories;
 let openedStories = [];
+let newStoryCount = 1;
+
 let options = {};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
-  fetch('https://newsy.glitch.me/api/rss')
+  fetch("https://newsy.glitch.me/api/rss")
     .then(res => res.text())
     .then(text => {
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
+
+      // Wait till we get the stories otherwise it doesn't
+      // seem to get storage
+      const storage = browser.storage.sync.get();
+      storage.then(
+        gotOptions => {
+          options = gotOptions;
+
+          if (options.count === "true") {
+            updateStoryCount();
+          } else {
+            browser.browserAction.setBadgeText({ text: "" });
+          }
+        },
+        () => console.error("Error getting options")
+      );
     });
 };
+
+// Counts how many new stories since last story
+function updateStoryCount() {
+  if (openedStories.length > 0) {
+    newStoryCount = 0;
+    for (let story of stories) {
+      if (openedStories.includes(story.link)) break;
+      else newStoryCount++;
+    }
+  }
+
+  if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: "" });
+  else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
+}
 
 function onCreated(tab) {}
 
 function onError(error) {
-  console.log(`Error: ${error}`);
+  console.error(`Error: ${error}`);
 }
 
 browser.browserAction.onClicked.addListener(function() {
@@ -41,7 +73,7 @@ browser.browserAction.onClicked.addListener(function() {
   // Don't let array get too big
   if (openedStories.length > 256) openedStories.shift();
 
-  if (options.newtab === 'true') {
+  if (options.newtab === "true") {
     browser.tabs
       .create({
         url: nextStory
@@ -51,22 +83,34 @@ browser.browserAction.onClicked.addListener(function() {
     var updating = browser.tabs.update({ url: nextStory });
     updating.then(() => {}, () => {});
   }
+
+  // Only update if we want to show article count
+  if (options.count === "true") {
+    newStoryCount--;
+    if (newStoryCount < 0) newStoryCount = 0;
+    if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: "" });
+    else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
+  }
 });
 
-browser.alarms.create('get-stories', { periodInMinutes: 5 });
+browser.alarms.create("get-stories", { periodInMinutes: 5 });
 
 browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
 });
 
-const getOptions = (changes, area) => {
+const getChangedOptions = (changes, area) => {
   var changedItems = Object.keys(changes);
 
   for (var item of changedItems) {
     options = { ...options, [item]: changes[item].newValue };
   }
+
+  getLatest();
 };
 
 // Initial grab of stories on load
 getLatest();
-browser.storage.onChanged.addListener(getOptions);
+
+// Set listener for changed options
+browser.storage.onChanged.addListener(getChangedOptions);
