@@ -20,8 +20,9 @@ const getLatest = () => {
 function updateStoryCount() {
   newStoryCount = 0;
 
-  if (openedStories > 0) {
+  if (openedStories.length > 0) {
     for (let story of stories) {
+      console.log(story.link);
       if (story.link === openedStories[openedStories.length - 1]) break;
       else newStoryCount++;
     }
@@ -33,7 +34,7 @@ function updateStoryCount() {
 
   if (newStoryCount === 0)
     browser.browserAction.setBadgeText({
-      text: '0'
+      text: ''
     });
   else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
 }
@@ -77,6 +78,9 @@ browser.browserAction.onClicked.addListener(function() {
   }
 
   newStoryCount = 0;
+  browser.browserAction.setBadgeText({
+    text: ''
+  });
 });
 
 browser.alarms.create('get-stories', { periodInMinutes: 1 });
