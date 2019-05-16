@@ -2,8 +2,9 @@ const parser = require('fast-xml-parser');
 
 let stories;
 let openedStories = [];
-let options = {};
-let newStoryCount = 0;
+let newStoryCount = 1;
+
+let options = { newtab: "false", count: "true" };
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
@@ -13,36 +14,29 @@ const getLatest = () => {
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
 
-      updateStoryCount();
+      if (options.count === 'true') {
+        updateStoryCount();
+      }
     });
 };
 
 function updateStoryCount() {
-  newStoryCount = 0;
-
   if (openedStories.length > 0) {
+    newStoryCount = 0;
     for (let story of stories) {
-      console.log(story.link);
-      if (story.link === openedStories[openedStories.length - 1]) break;
+      if (openedStories.includes(story.link)) break;
       else newStoryCount++;
     }
   }
 
-  console.log(newStoryCount);
-  console.log(openedStories[openedStories.length - 1]);
-  console.log(stories[0].link);
-
-  if (newStoryCount === 0)
-    browser.browserAction.setBadgeText({
-      text: ''
-    });
+  if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: '' });
   else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
 }
 
 function onCreated(tab) {}
 
 function onError(error) {
-  console.log(`Error: ${error}`);
+  console.error(`Error: ${error}`);
 }
 
 browser.browserAction.onClicked.addListener(function() {
@@ -77,10 +71,13 @@ browser.browserAction.onClicked.addListener(function() {
     updating.then(() => {}, () => {});
   }
 
-  newStoryCount = 0;
-  browser.browserAction.setBadgeText({
-    text: ''
-  });
+  // Only update if we want to show article count
+  if (options.count === 'true') {
+    newStoryCount--;
+    if (newStoryCount < 0) newStoryCount = 0;
+    if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: '' });
+    else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
+  }
 });
 
 browser.alarms.create('get-stories', { periodInMinutes: 1 });
@@ -95,11 +92,13 @@ const getOptions = (changes, area) => {
   for (var item of changedItems) {
     options = { ...options, [item]: changes[item].newValue };
   }
+
+  console.log(options);
 };
 
 // Initial grab of stories on load
-getLatest();
 browser.storage.onChanged.addListener(getOptions);
+getLatest();
 
 // function decrementNewStoryCount() {
 //   if (newStoryCount > 0) {
