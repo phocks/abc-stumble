@@ -93,7 +93,7 @@ browser.browserAction.onClicked.addListener(function() {
   }
 });
 
-browser.alarms.create("get-stories", { periodInMinutes: 1 });
+browser.alarms.create("get-stories", { periodInMinutes: 5 });
 
 browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
