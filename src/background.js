@@ -3,6 +3,7 @@ const parser = require('fast-xml-parser');
 let stories;
 let openedStories = [];
 let options = {};
+let newStoryCount = 0;
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
@@ -11,8 +12,31 @@ const getLatest = () => {
     .then(text => {
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
+
+      updateStoryCount();
     });
 };
+
+function updateStoryCount() {
+  newStoryCount = 0;
+
+  if (openedStories > 0) {
+    for (let story of stories) {
+      if (story.link === openedStories[openedStories.length - 1]) break;
+      else newStoryCount++;
+    }
+  }
+
+  console.log(newStoryCount);
+  console.log(openedStories[openedStories.length - 1]);
+  console.log(stories[0].link);
+
+  if (newStoryCount === 0)
+    browser.browserAction.setBadgeText({
+      text: '0'
+    });
+  else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
+}
 
 function onCreated(tab) {}
 
@@ -51,9 +75,11 @@ browser.browserAction.onClicked.addListener(function() {
     var updating = browser.tabs.update({ url: nextStory });
     updating.then(() => {}, () => {});
   }
+
+  newStoryCount = 0;
 });
 
-browser.alarms.create('get-stories', { periodInMinutes: 5 });
+browser.alarms.create('get-stories', { periodInMinutes: 1 });
 
 browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
@@ -70,3 +96,11 @@ const getOptions = (changes, area) => {
 // Initial grab of stories on load
 getLatest();
 browser.storage.onChanged.addListener(getOptions);
+
+// function decrementNewStoryCount() {
+//   if (newStoryCount > 0) {
+//     browser.browserAction.setBadgeText({ text: (--newStoryCount).toString() });
+//   }
+// }
+
+// browser.browserAction.onClicked.addListener(decrementNewStoryCount);
