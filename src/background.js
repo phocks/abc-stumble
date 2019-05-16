@@ -1,4 +1,4 @@
-const parser = require('fast-xml-parser');
+const parser = require("fast-xml-parser");
 
 let stories;
 let openedStories = [];
@@ -8,28 +8,31 @@ let options = {};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
-  fetch('https://newsy.glitch.me/api/rss')
+  fetch("https://newsy.glitch.me/api/rss")
     .then(res => res.text())
     .then(text => {
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
 
+      // Wait till we get the stories otherwise it doesn't
+      // seem to get storage
       const storage = browser.storage.sync.get();
       storage.then(
         gotOptions => {
           options = gotOptions;
 
-          if (options.count === 'true') {
+          if (options.count === "true") {
             updateStoryCount();
           } else {
-            browser.browserAction.setBadgeText({ text: '' });
+            browser.browserAction.setBadgeText({ text: "" });
           }
         },
-        () => console.log('Error getting options')
+        () => console.error("Error getting options")
       );
     });
 };
 
+// Counts how many new stories since last story
 function updateStoryCount() {
   if (openedStories.length > 0) {
     newStoryCount = 0;
@@ -39,7 +42,7 @@ function updateStoryCount() {
     }
   }
 
-  if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: '' });
+  if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: "" });
   else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
 }
 
@@ -70,7 +73,7 @@ browser.browserAction.onClicked.addListener(function() {
   // Don't let array get too big
   if (openedStories.length > 256) openedStories.shift();
 
-  if (options.newtab === 'true') {
+  if (options.newtab === "true") {
     browser.tabs
       .create({
         url: nextStory
@@ -82,15 +85,15 @@ browser.browserAction.onClicked.addListener(function() {
   }
 
   // Only update if we want to show article count
-  if (options.count === 'true') {
+  if (options.count === "true") {
     newStoryCount--;
     if (newStoryCount < 0) newStoryCount = 0;
-    if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: '' });
+    if (newStoryCount === 0) browser.browserAction.setBadgeText({ text: "" });
     else browser.browserAction.setBadgeText({ text: newStoryCount.toString() });
   }
 });
 
-browser.alarms.create('get-stories', { periodInMinutes: 1 });
+browser.alarms.create("get-stories", { periodInMinutes: 1 });
 
 browser.alarms.onAlarm.addListener(alarmInfo => {
   getLatest();
@@ -103,7 +106,6 @@ const getChangedOptions = (changes, area) => {
     options = { ...options, [item]: changes[item].newValue };
   }
 
-  console.log(options);
   getLatest();
 };
 
