@@ -22,7 +22,7 @@
   },
   "applications": {
     "gecko": {
-      "id": "{0e7996a3-b203-4794-847e-443bf1efac3e}"
+      "id": "{522a51c4-270c-49fd-bfcf-b3a012f80aa3}"
     }
   },
   "content_scripts": [
