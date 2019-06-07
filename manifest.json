@@ -1,6 +1,7 @@
 {
   "manifest_version": 2,
   "name": "ABC Stumble",
+  "short_name": "ABC Stumble",
   "version": "1.0.4",
 
   "description": "Loads latest ABC News",
@@ -15,7 +16,7 @@
   "background": {
     "scripts": ["browser-polyfill.js", "dist/background.js"]
   },
-  "permissions": ["alarms", "storage"],
+  "permissions": ["alarms", "storage", "activeTab"],
   "options_ui": {
     "page": "options.html",
     "browser_style": false
@@ -24,11 +25,5 @@
     "gecko": {
       "id": "{522a51c4-270c-49fd-bfcf-b3a012f80aa3}"
     }
-  },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["browser-script.js"]
-    }
-  ]
+  }
 }
