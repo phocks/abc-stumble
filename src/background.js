@@ -1,10 +1,12 @@
 const parser = require("fast-xml-parser");
+const _ = require("lodash");
 
 let stories;
 let openedStories = [];
 let newStoryCount = 1;
 
-let options = {};
+// Set some defaults
+let options = {count: "true", newTab: "false"};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
@@ -19,7 +21,7 @@ const getLatest = () => {
       const storage = browser.storage.sync.get();
       storage.then(
         gotOptions => {
-          options = gotOptions;
+          if (!_.isEmpty(gotOptions)) options = gotOptions;
 
           if (options.count === "true") {
             updateStoryCount();

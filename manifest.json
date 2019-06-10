@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "ABC Stumble",
   "short_name": "ABC Stumble",
-  "version": "1.0.4",
+  "version": "1.0.5",
 
   "description": "Loads latest ABC News",
 
@@ -16,7 +16,7 @@
   "background": {
     "scripts": ["browser-polyfill.js", "dist/background.js"]
   },
-  "permissions": ["alarms", "storage", "activeTab"],
+  "permissions": ["alarms", "storage"],
   "options_ui": {
     "page": "options.html",
     "browser_style": false
