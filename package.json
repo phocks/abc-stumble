@@ -5,7 +5,7 @@
   "main": "dist/background.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build src/background.js",
+    "build": "parcel build src/background.js --no-minify",
     "start": "parcel src/background.js --no-hmr"
   },
   "author": "",
