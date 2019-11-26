@@ -9,3 +9,5 @@ A new way to get the news.
 ## Development
 
 Parcel is used to build JS.
+
+Use `web-ext build --overwrite-dest` to build for Firefox
