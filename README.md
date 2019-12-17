@@ -10,4 +10,13 @@ A new way to get the news.
 
 Parcel is used to build JS.
 
+*To build:*
+
+1. Clone this project with `git clone https://github.com/phocks/abc-stumble`
+2. Enter directory with `cd abc-stumble`
+3. Install dependencies with `npm install`
+4. Build the source code with `npm run build`
+
+*For firefox upload:*
+
 Use `web-ext build --overwrite-dest` to build for Firefox
