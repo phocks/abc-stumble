@@ -10,7 +10,8 @@ let options = {count: "true", newTab: "false"};
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
-  fetch("https://newsy.glitch.me/api/rss")
+  // fetch("https://newsy.glitch.me/api/rss") // Glitch has started charging
+  fetch("http://feeds.feedburner.com/net/IzWm")
     .then(res => res.text())
     .then(text => {
       const jsonObj = parser.parse(text);
