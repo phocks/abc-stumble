@@ -6,14 +6,18 @@ let openedStories = [];
 let newStoryCount = 1;
 
 // Set some defaults
-let options = {count: "true", newTab: "false"};
+let options = { count: "true", newTab: "false" };
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
-  // fetch("https://newsy.glitch.me/api/rss") // Glitch has started charging
-  fetch("http://feeds.feedburner.com/net/IzWm")
-    .then(res => res.text())
-    .then(text => {
+  // Glitch has started charging so we want to find an 
+  // alternative sometime soon perhaps.
+  fetch("https://newsy.glitch.me/api/rss") 
+  // fetch("http://feeds.feedburner.com/net/IzWm", { mode: "no-cors" })
+  // fetch("https://www.abc.net.au/news/feed/51120/rss.xml", { mode: "no-cors" })
+    .then((res) => res.text())
+    .then((text) => {
+      console.log(text)
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
 
@@ -21,7 +25,7 @@ const getLatest = () => {
       // seem to get storage
       const storage = browser.storage.sync.get();
       storage.then(
-        gotOptions => {
+        (gotOptions) => {
           if (!_.isEmpty(gotOptions)) options = gotOptions;
 
           if (options.count === "true") {
@@ -55,7 +59,7 @@ function onError(error) {
   console.error(`Error: ${error}`);
 }
 
-browser.browserAction.onClicked.addListener(function() {
+browser.browserAction.onClicked.addListener(function () {
   // Loops through recent articals and returns the first one
   // that hasn't been stumbled before
   const getNextStoryLink = (stories, alreadyOpened) => {
@@ -79,12 +83,15 @@ browser.browserAction.onClicked.addListener(function() {
   if (options.newtab === "true") {
     browser.tabs
       .create({
-        url: nextStory
+        url: nextStory,
       })
       .then(onCreated, onError);
   } else {
     var updating = browser.tabs.update({ url: nextStory });
-    updating.then(() => {}, () => {});
+    updating.then(
+      () => {},
+      () => {}
+    );
   }
 
   // Only update if we want to show article count
@@ -98,7 +105,7 @@ browser.browserAction.onClicked.addListener(function() {
 
 browser.alarms.create("get-stories", { periodInMinutes: 5 });
 
-browser.alarms.onAlarm.addListener(alarmInfo => {
+browser.alarms.onAlarm.addListener((alarmInfo) => {
   getLatest();
 });
 
