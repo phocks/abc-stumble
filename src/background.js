@@ -10,14 +10,17 @@ let options = { count: "true", newTab: "false" };
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
-  // Glitch has started charging so we want to find an 
+  // Glitch has started charging so we want to find an
   // alternative sometime soon perhaps.
-  fetch("https://newsy.glitch.me/api/rss") 
+  fetch("https://newsy.glitch.me/api/rss")
   // fetch("http://feeds.feedburner.com/net/IzWm", { mode: "no-cors" })
   // fetch("https://www.abc.net.au/news/feed/51120/rss.xml", { mode: "no-cors" })
+  // fetch(
+  //   "https://cors-anywhere.herokuapp.com/https://www.abc.net.au/news/feed/51120/rss.xml"
+  // )
     .then((res) => res.text())
     .then((text) => {
-      console.log(text)
+      console.log(text);
       const jsonObj = parser.parse(text);
       stories = jsonObj.rss.channel.item;
 
