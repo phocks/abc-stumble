@@ -1,3 +1,4 @@
+// @ts-nocheck
 const parser = require("fast-xml-parser");
 const _ = require("lodash");
 
