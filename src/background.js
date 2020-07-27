@@ -13,12 +13,8 @@ const getLatest = () => {
   // Fetches latest story and sets it in global
   // Glitch has started charging so we want to find an
   // alternative sometime soon perhaps.
-  fetch("https://newsy.glitch.me/api/rss")
-  // fetch("http://feeds.feedburner.com/net/IzWm", { mode: "no-cors" })
-  // fetch("https://www.abc.net.au/news/feed/51120/rss.xml", { mode: "no-cors" })
-  // fetch(
-  //   "https://cors-anywhere.herokuapp.com/https://www.abc.net.au/news/feed/51120/rss.xml"
-  // )
+  // fetch("https://newsy.glitch.me/api/rss")
+  fetch("https://phocks.org/proxy_rss/")
     .then((res) => res.text())
     .then((text) => {
       console.log(text);
