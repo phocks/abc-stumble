@@ -19,7 +19,11 @@
   "background": {
     "scripts": ["browser-polyfill.js", "dist/background.js"]
   },
-  "permissions": ["alarms", "storage"],
+  "permissions": [
+    "alarms",
+    "storage",
+    "https://www.abc.net.au/news/feed/51120/rss.xml"
+  ],
   "options_ui": {
     "page": "options.html",
     "browser_style": false

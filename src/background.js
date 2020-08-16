@@ -14,7 +14,8 @@ const getLatest = () => {
   // Glitch has started charging so we want to find an
   // alternative sometime soon perhaps.
   // fetch("https://newsy.glitch.me/api/rss")
-  fetch("https://phocks.org/proxy_rss/")
+  // fetch("https://phocks.org/proxy_rss/")
+  fetch("https://www.abc.net.au/news/feed/51120/rss.xml")
     .then((res) => res.text())
     .then((text) => {
       console.log(text);
