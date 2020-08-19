@@ -2,7 +2,7 @@
 const parser = require("fast-xml-parser");
 const _ = require("lodash");
 
-const TIME_BETWEEN_FETCH_STORIES = 15; // In minutes
+const TIME_BETWEEN_FETCH_STORIES = 5; // In minutes
 
 let stories;
 let openedStories = [];
@@ -13,6 +13,7 @@ let options = { count: "true", newTab: "false" };
 
 const getLatest = () => {
   // Fetches latest story and sets it in global
+  // (cached if no change detected)
   fetch("https://www.abc.net.au/news/feed/51120/rss.xml")
     .then((res) => res.text())
     .then((text) => {
