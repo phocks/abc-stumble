@@ -20,3 +20,7 @@ Parcel is used to build JS.
 *For firefox upload:*
 
 Use `web-ext build --overwrite-dest` to build for Firefox
+
+### Notes
+
+1. This is the RSS feed for the ABC Just In breaking news: https://www.abc.net.au/news/feed/51120/rss.xml
