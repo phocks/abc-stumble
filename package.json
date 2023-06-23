@@ -16,7 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "fast-xml-parser": "^3.17.4",
+    "fast-xml-parser": "^3.19.0",
     "lodash": "^4.17.19"
   },
   "devDependencies": {
